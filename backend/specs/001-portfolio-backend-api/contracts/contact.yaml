@@ -1,0 +1,79 @@
+openapi: 3.0.3
+info:
+  title: Contact API
+  version: 1.0.0
+  description: Contact form submission endpoint
+
+paths:
+  /api/contact:
+    post:
+      summary: Submit contact form
+      operationId: submitContact
+      tags:
+        - Contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - message
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                message:
+                  type: string
+                  minLength: 10
+                  maxLength: 2000
+                  example: "I'm interested in working with you on a project..."
+      responses:
+        '201':
+          description: Contact form submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Thanks! I'll get back soon."
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Validation failed"
+                  details:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    example:
+                      email: "Must be a valid email address"
+                      message: "Message must be at least 10 characters"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to submit contact form. Please try again later."
